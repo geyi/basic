@@ -67,7 +67,6 @@ public class SelectorThread implements Runnable {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel client = server.accept();
         client.configureBlocking(false);
-//        client.register(selector, SelectionKey.OP_READ);
         // 选择一个多路复用器注册读事件
         this.stg.nextSelector(client);
         System.out.println(Thread.currentThread().getName() + " client linked " + client.getRemoteAddress());
