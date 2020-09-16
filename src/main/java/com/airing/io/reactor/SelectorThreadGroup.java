@@ -2,6 +2,7 @@ package com.airing.io.reactor;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.Channel;
+import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +15,7 @@ public class SelectorThreadGroup {
 
     public SelectorThreadGroup(int threadNum) {
         if (threadNum <= 0) {
-            throw new RuntimeException("threadNum is not lte 0");
+            throw new RuntimeException("threadNum can not lte 0");
         }
         this.threadNum = threadNum;
         selectors = new SelectorThread[threadNum];
@@ -43,6 +44,16 @@ public class SelectorThreadGroup {
 
     public void nextSelector(Channel channel) throws Exception {
         SelectorThread st = this.next();
+        /*
+        为什么不在这里调用register方法注册channel？
+        因为如果SelectorThread中的多路复用器在执行以下代码之前阻塞在select方法上
+        那么这里的register方法就会被阻塞，导致selector永远不会被唤醒
+         */
+        /*
+        ServerSocketChannel server = (ServerSocketChannel) channel;
+        server.register(st.selector, SelectionKey.OP_ACCEPT);
+        st.selector.wakeup();
+        */
         st.queue.put(channel);
         st.selector.wakeup();
     }
