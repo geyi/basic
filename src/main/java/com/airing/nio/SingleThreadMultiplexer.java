@@ -81,6 +81,8 @@ public class SingleThreadMultiplexer {
                 break;
             }
         }
+        byte[] array = buffer.array();
+        System.out.println(new String(array));
     }
 
     public static void main(String[] args) {
