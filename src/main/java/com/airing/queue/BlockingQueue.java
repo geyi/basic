@@ -7,17 +7,17 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class QueueTest {
-    final Lock lock = new ReentrantLock();
-    final Condition notFull = lock.newCondition();
-    final Condition notEmpty = lock.newCondition();
-    final int limit = 5;
-    final long timeout = 500;
+public class BlockingQueue {
+    private static final Lock lock = new ReentrantLock();
+    private static final Condition notFull = lock.newCondition();
+    private static final Condition notEmpty = lock.newCondition();
+    private static final int limit = 5;
+    private static final long timeout = 500;
 
-    final Object[] items = new Object[1000];
-    int putptr, takeptr, count;
+    private static final Object[] items = new Object[1000];
+    private static int putptr, takeptr, count;
 
-    public void put(Object x) throws InterruptedException {
+    public static void put(Object x) throws InterruptedException {
         lock.lock();
         try {
             while (count == items.length) {
@@ -34,7 +34,7 @@ public class QueueTest {
         }
     }
 
-    public List<Object> take() throws InterruptedException {
+    public static List<Object> take() throws InterruptedException {
         lock.lock();
         try {
             long future = System.currentTimeMillis() + timeout;
@@ -65,12 +65,10 @@ public class QueueTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        QueueTest queueTest = new QueueTest();
-
         Thread putThread = new Thread(() -> {
             for (int i = 0; i < 100; i++) {
                 try {
-                    queueTest.put(i);
+                    BlockingQueue.put(i);
                     System.out.println("put " + i);
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
@@ -81,7 +79,7 @@ public class QueueTest {
         Thread putThread2 = new Thread(() -> {
             for (int i = 0; i < 100; i++) {
                 try {
-                    queueTest.put(i);
+                    BlockingQueue.put(i);
                     System.out.println("put " + i);
                     TimeUnit.MILLISECONDS.sleep(200);
                 } catch (InterruptedException e) {
@@ -94,7 +92,7 @@ public class QueueTest {
             try {
                 int total = 0;
                 for (int i = 0; i < 100; i++) {
-                    List<Object> list = queueTest.take();
+                    List<Object> list = BlockingQueue.take();
                     total += list.size();
                     System.out.println("take " + list.size() + ", total " + total);
                 }
@@ -106,6 +104,5 @@ public class QueueTest {
         putThread.start();
         putThread2.start();
         takeThread.start();
-
     }
 }
