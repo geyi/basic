@@ -1,4 +1,4 @@
-package com.airing.rpc;
+package com.airing.rpc.v1;
 
 import java.io.Serializable;
 

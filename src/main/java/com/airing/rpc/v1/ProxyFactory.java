@@ -1,4 +1,4 @@
-package com.airing.rpc;
+package com.airing.rpc.v1;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
