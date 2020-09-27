@@ -31,16 +31,15 @@ public class Server {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
-                    protected void initChannel(NioSocketChannel serverSocketChannel) throws Exception {
-                        ChannelPipeline pipeline = serverSocketChannel.pipeline();
+                    protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
+                        ChannelPipeline pipeline = nioSocketChannel.pipeline();
                         pipeline.addLast(new RequestHandler());
                     }
                 }).bind(new InetSocketAddress("127.0.0.1", 9000));
 
         Channel server = bindFuture.sync().channel();
+        System.out.println("server startup!!!");
         server.closeFuture().sync();
-
-
     }
 
     static class RequestHandler extends ChannelInboundHandlerAdapter {

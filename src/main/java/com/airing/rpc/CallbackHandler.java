@@ -1,6 +1,5 @@
 package com.airing.rpc;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CallbackHandler {
