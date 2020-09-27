@@ -48,8 +48,12 @@ public class ClientFactory {
         }
 
         synchronized (clientPool.locks[index]) {
-            return clientPool.clients[index] = createClient(address);
+            if (clientPool.clients[index] == null) {
+                return clientPool.clients[index] = createClient(address);
+            }
         }
+
+        return clientPool.clients[index];
     }
 
     private NioSocketChannel createClient(InetSocketAddress address) {
