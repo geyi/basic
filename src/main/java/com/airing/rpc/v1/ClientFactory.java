@@ -1,5 +1,6 @@
 package com.airing.rpc.v1;
 
+import com.airing.rpc.RpcConstant;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
@@ -81,8 +82,8 @@ public class ClientFactory {
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
             ByteBuf data = (ByteBuf) msg;
-            if (data.readableBytes() >= 94) {
-                byte[] headerByte = new byte[94];
+            if (data.readableBytes() >= RpcConstant.PACKAGE_LENGTH) {
+                byte[] headerByte = new byte[RpcConstant.PACKAGE_LENGTH];
                 data.readBytes(headerByte);
                 ByteArrayInputStream headerInput = new ByteArrayInputStream(headerByte);
                 ObjectInputStream headerObjInput = new ObjectInputStream(headerInput);
