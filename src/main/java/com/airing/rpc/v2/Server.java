@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * v2版本解决了拆包粘包的问题
+ * v2版本解决了粘包拆包的问题
  */
 public class Server {
 
