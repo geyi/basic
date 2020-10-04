@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.UUID;
@@ -129,11 +130,18 @@ public class Server {
                         + ", ioThreadName: " + ioThreadName
                         + ", execThreadName: " + execThreadName;
                 System.out.println(s);
-                pkg.getBody().setResponse(s);
+
+                String serviceName = pkg.getBody().getServiceName();
+                String methodName = pkg.getBody().getMethodName();
+                Object service = ServicMapping.getInstance().get(serviceName);
+                Class<?> clazz = service.getClass();
 
                 try {
+                    Method method = clazz.getMethod(methodName, pkg.getBody().getParameterTypes());
+                    Object ret = method.invoke(service, pkg.getBody().getArgs());
+
                     Body body = new Body();
-                    body.setResponse(s);
+                    body.setResponse(String.valueOf(ret));
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     ObjectOutputStream objOut = new ObjectOutputStream(out);
