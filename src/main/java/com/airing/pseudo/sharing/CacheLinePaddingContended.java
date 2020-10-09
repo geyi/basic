@@ -2,6 +2,10 @@ package com.airing.pseudo.sharing;
 
 import sun.misc.Contended;
 
+/**
+ * JDK8加入了@Contended注解来解决伪共享
+ * 需要加上JVM参数：-XX:-RestrictContended
+ */
 public class CacheLinePaddingContended {
     @Contended
     volatile long l1;

@@ -2,6 +2,7 @@ package com.airing.pseudo.sharing;
 
 /**
  * 缓存行对齐
+ * 解决伪共享问题
  */
 public class CacheLinePadding01 {
     private static class T {

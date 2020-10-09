@@ -15,6 +15,7 @@ package com.airing.write.combining;
  * </ul>
  * AMD CPU没有合并写？或者AMD CPU的WC Buffer不是四个字节？
  * </p>
+ * <p>在Intel CPU下测试，两种情况的耗时差不多</p>
  */
 public class WriteCombining {
     private static final int ITERATIONS = Integer.MAX_VALUE;

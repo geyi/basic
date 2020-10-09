@@ -28,6 +28,13 @@ public class Disorder {
             other.start();
             one.join();
             other.join();
+            /**
+             * a, b, x, y的初始值都是0
+             * a = 1; x = b; 是两条没有关联的语句，所以可以对他们进行指令重排
+             * b = 1; y = a; 同上
+             * 如果存在x == 0 && y == 0，则说明y = a; 和 x = b;一定在a = 1; 和 b = 1;之前执行了
+             * 即发生了指令重排
+             */
             if (x == 0 && y == 0) {
                 String result = "第" + i + "次（x = " + x + ", y = " + y + ")";
                 System.out.println(result);
