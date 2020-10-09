@@ -1,8 +1,8 @@
-package com.airing;
+package com.airing.thread;
 
 import java.util.concurrent.TimeUnit;
 
-public class Test {
+public class ThreadState {
 
     private static final Object lock = new Object();
 
