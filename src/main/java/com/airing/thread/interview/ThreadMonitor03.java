@@ -12,15 +12,6 @@ public class ThreadMonitor03 {
     public static void main(String[] args) {
         List<Object> list = new ArrayList<>();
 
-        t2 = new Thread(() -> {
-            System.out.println("t2启动");
-            if (list.size() != 5) {
-                LockSupport.park();
-            }
-            System.out.println("list size " + list.size());
-            LockSupport.unpark(t1);
-        });
-
         t1 = new Thread(() -> {
             System.out.println("t1启动");
             for (int i = 0; i < 10; i++) {
@@ -31,6 +22,14 @@ public class ThreadMonitor03 {
                     LockSupport.park();
                 }
             }
+            System.out.println("t1结束");
+        });
+
+        t2 = new Thread(() -> {
+            System.out.println("t2启动");
+            LockSupport.park();
+            System.out.println("list size " + list.size() + " t2结束");
+            LockSupport.unpark(t1);
         });
 
         t1.start();
