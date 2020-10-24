@@ -1,62 +1,71 @@
 package com.airing.thread.interview;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class ProducerConsumer01 {
+public class ProducerConsumer02 {
 
-    private static final Object LOCK = new Object();
+    private static Lock lock = new ReentrantLock();
+    private static Condition producerCondition = lock.newCondition();
+    private static Condition consumerCondition = lock.newCondition();
     private static final Object[] ITEMS = new Object[10];
 
     private static int count, putIndex, takeIndex = 0;
 
-    public synchronized void put(Object obj) {
+    public static void put(Object obj) {
+        lock.lock();
         try {
             while (count == ITEMS.length) {
-                this.wait();
+                producerCondition.await();
             }
+
+            ITEMS[putIndex] = obj;
+            if (++putIndex == ITEMS.length) {
+                putIndex = 0;
+            }
+            count++;
+            consumerCondition.signalAll();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            lock.unlock();
         }
-
-        ITEMS[putIndex] = obj;
-        if (++putIndex == ITEMS.length) {
-            putIndex = 0;
-        }
-        count++;
-        /**
-         * 这里唤醒了所有等待中的线程，包括生产者线程
-         * 但是此时生产者线程不应该被唤醒
-         */
-        this.notifyAll();
     }
 
-    public synchronized Object take() {
+    public static Object take() {
+        lock.lock();
         try {
             while (count == 0) {
-                this.wait();
+                consumerCondition.await();
             }
+
+            Object item = ITEMS[takeIndex];
+            if (++takeIndex == ITEMS.length) {
+                takeIndex = 0;
+            }
+            count--;
+            producerCondition.signalAll();
+            return item;
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return null;
+        } finally {
+            lock.unlock();
         }
-
-        Object item = ITEMS[takeIndex];
-        if (++takeIndex == ITEMS.length) {
-            takeIndex = 0;
-        }
-        count--;
-        this.notifyAll();
-        return item;
     }
 
     public static void main(String[] args) {
-        ProducerConsumer01 producerConsumer01 = new ProducerConsumer01();
+        int producerCount = 1;
+        int consumerCount = 1;
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < producerCount; i++) {
             final int number = i;
             new Thread(() -> {
                 String threadName = "producer" + number;
-                for (int m = 0; m < 15; m++) {
-                    producerConsumer01.put(new Object());
+                for (int m = 0; m < 10; m++) {
+                    ProducerConsumer02.put(new Object());
                     System.out.println(threadName + " put " + m);
                     try {
                         TimeUnit.MILLISECONDS.sleep(100);
@@ -67,12 +76,12 @@ public class ProducerConsumer01 {
             }).start();
         }
 
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < consumerCount; j++) {
             final int number = j;
             new Thread(() -> {
                 String threadName = "consumer" + number;
                 for (int n = 0; n < 10; n++) {
-                    Object obj = producerConsumer01.take();
+                    Object obj = ProducerConsumer02.take();
                     System.out.println(threadName + " take " + n);
                     try {
                         TimeUnit.MILLISECONDS.sleep(150);
