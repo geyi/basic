@@ -1,4 +1,4 @@
-package com.airing.thread;
+package com.airing.thread.aqs;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;

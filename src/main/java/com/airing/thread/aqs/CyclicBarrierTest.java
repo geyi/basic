@@ -1,4 +1,4 @@
-package com.airing.thread;
+package com.airing.thread.aqs;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
