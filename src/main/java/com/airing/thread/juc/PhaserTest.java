@@ -1,4 +1,4 @@
-package com.airing.thread.aqs;
+package com.airing.thread.juc;
 
 import java.util.Random;
 import java.util.concurrent.Phaser;

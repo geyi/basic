@@ -1,4 +1,4 @@
-package com.airing.thread.aqs;
+package com.airing.thread.juc;
 
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.TimeUnit;
