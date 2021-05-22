@@ -1,4 +1,4 @@
-package com.airing.io.nio;
+package com.airing.io.socket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
