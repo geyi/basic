@@ -130,7 +130,7 @@ public class ClientFactory {
                 ObjectInputStream headerObjInput = new ObjectInputStream(headerInput);
                 Header header = (Header) headerObjInput.readObject();
 
-                if (byteBuf.readableBytes() >= header.getBodyLength()) {
+                if (byteBuf.readableBytes() - RpcConstant.PACKAGE_LENGTH >= header.getBodyLength()) {
                     byte[] bodyByte = new byte[(int) header.getBodyLength()];
                     byteBuf.readBytes(RpcConstant.PACKAGE_LENGTH);
                     byteBuf.readBytes(bodyByte);

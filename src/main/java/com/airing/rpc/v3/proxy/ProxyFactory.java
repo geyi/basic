@@ -4,6 +4,7 @@ import com.airing.rpc.v3.rpc.Dispatcher;
 import com.airing.rpc.v3.rpc.protocol.Body;
 import com.airing.rpc.v3.rpc.transport.ClientFactory;
 import com.airing.rpc.v3.service.RpcService;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.concurrent.CompletableFuture;
@@ -69,14 +70,14 @@ public class ProxyFactory {
         });
     }
 
-    public static void main(String[] args) {
-        int size = 10;
+    public static void main(String[] args) throws IOException {
+        int size = 100;
         AtomicInteger index = new AtomicInteger(0);
         Thread[] threads = new Thread[size];
         for (int i = 0; i < size; i++) {
             threads[i] = new Thread(() -> {
                 RpcService rpcService = ProxyFactory.getInstance(RpcService.class);
-                String arg = "hello" + index.getAndIncrement();
+                String arg = "hellohellohellohellohellohellohellohellohello" + index.getAndIncrement();
                 String ret = rpcService.rpcMethod(arg);
                 System.out.println("req arg: " + arg + ", ret: " + ret);
             });
@@ -85,6 +86,8 @@ public class ProxyFactory {
         for (int i = 0; i < size; i++) {
             threads[i].start();
         }
+
+        System.in.read();
     }
 
 }

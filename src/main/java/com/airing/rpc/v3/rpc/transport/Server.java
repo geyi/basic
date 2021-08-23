@@ -59,31 +59,37 @@ public class Server {
     static class RequestDecoder extends ByteToMessageDecoder {
         @Override
         protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
+//            System.out.println("bytebuf size " + byteBuf.readableBytes());
             while (byteBuf.readableBytes() >= RpcConstant.PACKAGE_LENGTH) {
                 byte[] headerByte = new byte[RpcConstant.PACKAGE_LENGTH];
 //                data.readBytes(headerByte);
+                // 不会移动指针
                 byteBuf.getBytes(byteBuf.readerIndex(), headerByte);
                 ByteArrayInputStream headerInput = new ByteArrayInputStream(headerByte);
                 ObjectInputStream headerObjInput = new ObjectInputStream(headerInput);
                 Header header = (Header) headerObjInput.readObject();
-                System.out.println("server receive: " + header.getRequestId() + ", content length: " + header.getBodyLength());
+                System.out.println("server receive: " + header.getRequestId()
+                        + ", content length: " + header.getBodyLength()
+                        + ", readable: " + byteBuf.readableBytes());
 
-                if (byteBuf.readableBytes() >= header.getBodyLength()) {
+                if (byteBuf.readableBytes() - RpcConstant.PACKAGE_LENGTH >= header.getBodyLength()) {
                     byte[] bodyByte = new byte[(int) header.getBodyLength()];
+                    // 移动指针到body开始的位置
                     byteBuf.readBytes(RpcConstant.PACKAGE_LENGTH);
 //                    data.readBytes(bodyByte);
                     byteBuf.readBytes(bodyByte);
                     ByteArrayInputStream bodyInput = new ByteArrayInputStream(bodyByte);
                     ObjectInputStream bodyObjInput = new ObjectInputStream(bodyInput);
                     Body body = (Body) bodyObjInput.readObject();
-                    System.out.println(body.getServiceName());
-                    System.out.println(body.getMethodName());
+//                    System.out.println(body.getServiceName());
+//                    System.out.println(body.getMethodName());
                     list.add(new Package(header, body));
                 } else {
                     System.out.println("read body else: " + byteBuf.readableBytes());
                     break;
                 }
             }
+            System.out.println("read body while: " + byteBuf.readableBytes());
         }
     }
 
