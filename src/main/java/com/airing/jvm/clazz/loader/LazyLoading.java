@@ -1,6 +1,10 @@
 package com.airing.jvm.clazz.loader;
 
 public class LazyLoading {
+    static {
+        System.out.println("lazy loading");
+    }
+
     public static void main(String[] args) throws ClassNotFoundException {
         // P类不会被加载
 //        P p;
@@ -8,6 +12,8 @@ public class LazyLoading {
 //        System.out.println(P.i);
         // P类会被加载
 //        System.out.println(P.j);
+        // P类会被加载
+//        P.j = 0;
         // P类会被加载
 //        X x = new X();
         // P类会被加载
