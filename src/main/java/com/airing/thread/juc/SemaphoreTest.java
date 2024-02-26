@@ -13,7 +13,7 @@ public class SemaphoreTest {
                 semaphore.acquire();
                 System.out.println(Thread.currentThread().getName() + " running");
                 TimeUnit.SECONDS.sleep(1);
-                System.out.println(Thread.currentThread().getName() + " running");
+                System.out.println(Thread.currentThread().getName() + " done");
             } catch (Exception e) {
 
             } finally {
@@ -26,7 +26,7 @@ public class SemaphoreTest {
                 semaphore.acquire();
                 System.out.println(Thread.currentThread().getName() + " running");
                 TimeUnit.SECONDS.sleep(1);
-                System.out.println(Thread.currentThread().getName() + " running");
+                System.out.println(Thread.currentThread().getName() + " done");
             } catch (Exception e) {
 
             } finally {
