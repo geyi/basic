@@ -38,9 +38,9 @@ public class Server {
 
     public static void startup() throws Exception {
         NioEventLoopGroup boss = new NioEventLoopGroup(8);
-        NioEventLoopGroup worder = boss;
+        NioEventLoopGroup worker = boss;
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        ChannelFuture bindFuture = serverBootstrap.group(boss, worder)
+        ChannelFuture bindFuture = serverBootstrap.group(boss, worker)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
