@@ -20,7 +20,7 @@ public class CyclicBarrierTest {
                 } catch (BrokenBarrierException e) {
                     e.printStackTrace();
                 }
-                System.out.println(Thread.currentThread().getName() + "到咯");
+                System.out.println(Thread.currentThread().getName() + " 到咯");
             }).start();
         }
     };
