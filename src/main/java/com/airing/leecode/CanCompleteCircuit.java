@@ -59,6 +59,10 @@ public class CanCompleteCircuit {
             costTotal += ct - cost[i];
             if (gasTotal >= costTotal) {
                 return i;
+            } else {
+                gt = gasTotal;
+                ct = costTotal;
+                i = j;
             }
         }
         return -1;
